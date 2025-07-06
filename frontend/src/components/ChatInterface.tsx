@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Message, ChatCategory } from '../types';
 import { ChatMessage } from './ChatMessage';
 import { QuickActions } from './QuickActions';
-import { VoiceInput } from './VoiceInput';
+import { AudioRecorder } from './AudioRecorder';
 import { ImageInput } from './ImageInput';
 import { Send, ArrowLeft } from 'lucide-react';
 import { botResponses } from '../data/responses';
@@ -88,8 +88,28 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ category, onBack }
     sendMessage(inputValue);
   };
 
-  const handleVoiceInput = (transcript: string) => {
-    sendMessage(`🎤 ${transcript}`, 'voice');
+
+  const handleAudioReady = (audioUrl: string) => {
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      content: '🎤 音声メッセージを送信しました',
+      sender: 'user',
+      timestamp: new Date(),
+      category: category.id,
+      type: 'voice'
+    };
+
+    const botMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      content: '音声メッセージが届きました。再生してお聞きください。',
+      sender: 'bot',
+      timestamp: new Date(),
+      category: category.id,
+      type: 'voice',
+      audioUrl
+    };
+
+    setMessages(prev => [...prev, userMessage, botMessage]);
   };
 
   const handleImageUpload = (imageData: string, description: string) => {
@@ -168,7 +188,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ category, onBack }
           </div>
           
           <div className="flex gap-2">
-            <VoiceInput onVoiceInput={handleVoiceInput} />
+            <AudioRecorder onAudioReady={handleAudioReady} />
             <ImageInput onImageUpload={handleImageUpload} />
             <button
               type="submit"

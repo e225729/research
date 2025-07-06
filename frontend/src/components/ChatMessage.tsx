@@ -58,11 +58,23 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       <div className={`max-w-xs lg:max-w-md ${isBot ? '' : 'text-right'}`}>
         {getMessageBadge()}
         <div className={`px-4 py-3 rounded-2xl shadow-sm ${
-          isBot 
-            ? 'bg-white border border-gray-200 text-gray-800' 
+          isBot
+            ? 'bg-white border border-gray-200 text-gray-800'
             : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
         }`}>
           <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+          {message.audioUrl && (
+            <button
+              type="button"
+              onClick={() => {
+                const audio = new Audio(message.audioUrl);
+                audio.play();
+              }}
+              className="mt-2 inline-flex items-center gap-1 text-sm text-blue-600"
+            >
+              <Mic size={14} /> 再生
+            </button>
+          )}
           <p className={`text-xs mt-2 ${
             isBot ? 'text-gray-500' : 'text-blue-100'
           }`}>

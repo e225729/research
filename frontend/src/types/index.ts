@@ -5,6 +5,8 @@ export interface Message {
   timestamp: Date;
   category?: string;
   type?: 'text' | 'voice' | 'image';
+  /** Optional URL to an audio response */
+  audioUrl?: string;
 }
 
 export interface ChatCategory {
